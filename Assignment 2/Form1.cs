@@ -34,13 +34,25 @@ namespace Assignment_2
             openFileDialog1.Filter = " csv Files|* . csv";
             DialogResult result = openFileDialog1.ShowDialog();
             if (result == DialogResult.OK)
-            { 
+            {
                 try
                 {
                     using (StreamReader sr = new StreamReader(openFileDialog1.FileName))
                     {
                         string line = sr.ReadLine();
-                        while (!)
+                        while (!sr.EndOfStream)
+                        {
+                            table.Add(new row());
+                            string[] r = sr.ReadLine().Split(',');
+                            table.Last().time = double.Parse(r[0]);
+                            table.Last().velocity = double.Parse(r[1]);
+                            table.Last().acceleration = double.Parse(r[2]);
+                            table.Last().altitude = double.Parse(r[3]);
+                        }
+                    }
+                }   
+            }
         }
     }
 }
+    
