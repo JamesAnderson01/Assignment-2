@@ -15,15 +15,16 @@ namespace Assignment_2
     {
         class row
         {
-            double time;
-            double velocity;
-            double acceleration;
-            double altitude;
+            public double time;
+            public double velocity;
+            public double acceleration;
+            public double altitude;
         }
 
         List<row> table = new List<row>();
         public Form1()
         {
+
             InitializeComponent();
 
         }
@@ -50,8 +51,38 @@ namespace Assignment_2
                             table.Last().altitude = double.Parse(r[3]);
                         }
                     }
-                }   
+                }
+                catch (IOException)
+                {
+                    MessageBox.Show(openFileDialog1.FileName + "failed to open");
+                }
+                catch (FormatException)
+                {
+                    MessageBox.Show(openFileDialog1.FileName + " is not in the required format. ");
+                }
+                catch (IndexOutOfRangeException)
+                {
+                    MessageBox.Show(openFileDialog1.FileName + " is not in the required format. ");
+                }
             }
+        }
+        void derivative()
+        {
+            for (int i = 1; i < table.Count; i++)
+            {
+                double dS = table[i].altitude - table[i - 1].altitude;
+                double dt = table[i].time - table[i - 1].time;
+                table[i].velocity = dS / dt;
+            }
+        }
+    }
+    void derivative()
+    {
+        for (int i = 1; i < table.Count; i++)
+        {
+            double dV = table[i].velocity - table[i - 1].altitude;
+            double dt = table[i].time - table[i - 1].time;
+            table[i].velocity = dV / dt;
         }
     }
 }
