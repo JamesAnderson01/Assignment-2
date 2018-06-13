@@ -75,14 +75,15 @@ namespace Assignment_2
                 table[i].velocity = dS / dt;
             }
         }
-    }
-    void derivative()
-    {
-        for (int i = 1; i < table.Count; i++)
+
+        void derivative2()
         {
-            double dV = table[i].velocity - table[i - 1].altitude;
-            double dt = table[i].time - table[i - 1].time;
-            table[i].velocity = dV / dt;
+            for (int i = 1; i < table.Count; i++)
+            {
+                double dV = table[i].velocity - table[i - 1].altitude;
+                double dt = table[i].time - table[i - 1].time;
+                table[i].velocity = dV / dt;
+            }
         }
     }
 }
