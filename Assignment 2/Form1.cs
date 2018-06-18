@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
+using System.Windows.Forms.DataVisualization.Charting;
 
 namespace Assignment_2
 {
@@ -32,7 +33,7 @@ namespace Assignment_2
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
             openFileDialog1.FileName = "";
-            openFileDialog1.Filter = " csv Files|* . csv";
+            openFileDialog1.Filter = " csv Files|*.csv";
             DialogResult result = openFileDialog1.ShowDialog();
             if (result == DialogResult.OK)
             {
@@ -46,11 +47,11 @@ namespace Assignment_2
                             table.Add(new row());
                             string[] r = sr.ReadLine().Split(',');
                             table.Last().time = double.Parse(r[0]);
-                            table.Last().velocity = double.Parse(r[1]);
-                            table.Last().acceleration = double.Parse(r[2]);
-                            table.Last().altitude = double.Parse(r[3]);
+                            table.Last().altitude = double.Parse(r[1]);
                         }
                     }
+                    derivative();
+                    derivative2();
                 }
                 catch (IOException)
                 {
@@ -78,12 +79,81 @@ namespace Assignment_2
 
         void derivative2()
         {
-            for (int i = 1; i < table.Count; i++)
+            for (int i = 2; i < table.Count; i++)
             {
                 double dV = table[i].velocity - table[i - 1].altitude;
                 double dt = table[i].time - table[i - 1].time;
-                table[i].velocity = dV / dt;
+                table[i].acceleration = dV / dt;
             }
+        }
+
+        private void velocityTimeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            chart1.Series.Clear();
+            chart1.ChartAreas[0].AxisX.IsMarginVisible = false;
+            Series series = new Series
+            {
+                Name = "Velocity",
+                Color = Color.Blue,
+                IsVisibleInLegend = false,
+                IsXValueIndexed = true,
+                ChartType = SeriesChartType.Spline,
+                BorderWidth = 2
+            };
+            chart1.Series.Add(series);
+            foreach(row r in table.Skip(1))
+            {
+                series.Points.AddXY(r.time, r.velocity);
+            }
+            chart1.ChartAreas[0].AxisX.Title = "time /s";
+            chart1.ChartAreas[0].AxisY.Title = "velocity /A";
+            chart1.ChartAreas[0].RecalculateAxesScale();
+        }
+
+        private void AccelerationTimeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            chart1.Series.Clear();
+            chart1.ChartAreas[0].AxisX.IsMarginVisible = false;
+            Series series = new Series
+            {
+                Name = "Acceleration",
+                Color = Color.Blue,
+                IsVisibleInLegend = false,
+                IsXValueIndexed = true,
+                ChartType = SeriesChartType.Spline,
+                BorderWidth = 2
+            };
+            chart1.Series.Add(series);
+            foreach (row r in table.Skip(1))
+            {
+                series.Points.AddXY(r.time, r.acceleration);
+            }
+            chart1.ChartAreas[0].AxisX.Title = "time /s";
+            chart1.ChartAreas[0].AxisY.Title = "Acceleration /A";
+            chart1.ChartAreas[0].RecalculateAxesScale();
+        }
+
+        private void AltitudeTimeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            chart1.Series.Clear();
+            chart1.ChartAreas[0].AxisX.IsMarginVisible = false;
+            Series series = new Series
+            {
+                Name = "Altitude",
+                Color = Color.Blue,
+                IsVisibleInLegend = false,
+                IsXValueIndexed = true,
+                ChartType = SeriesChartType.Spline,
+                BorderWidth = 2
+            };
+            chart1.Series.Add(series);
+            foreach (row r in table.Skip(1))
+            {
+                series.Points.AddXY(r.time, r.altitude);
+            }
+            chart1.ChartAreas[0].AxisX.Title = "time /s";
+            chart1.ChartAreas[0].AxisY.Title = "Altitude /A";
+            chart1.ChartAreas[0].RecalculateAxesScale();
         }
     }
 }
